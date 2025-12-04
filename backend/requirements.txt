@@ -1,0 +1,4 @@
+psycopg2-binary
+dotenv
+fastapi
+uvicorn[standard]
