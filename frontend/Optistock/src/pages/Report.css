@@ -1,69 +1,59 @@
 /* Report Page */
 .report-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 2rem;
 }
 
 .report-header {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .report-header h1 {
   margin: 0;
-  color: white;
-  font-size: 2rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(135deg, #bf00ff 0%, #0077ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .btn-back {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  border: 1px solid rgba(191, 0, 255, 0.2);
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
   transition: all 0.3s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .btn-back:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateX(-3px);
-}
-
-.btn-export {
-  background: rgba(255, 255, 255, 0.95);
-  color: #667eea;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.btn-export:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-  background: white;
+  background: rgba(191, 0, 255, 0.1);
+  border-color: #bf00ff;
+  transform: translateX(-4px);
 }
 
 .report-content {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
+  border: 1px solid rgba(191, 0, 255, 0.2);
   border-radius: 16px;
   padding: 3rem;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* Report Title */
@@ -71,27 +61,28 @@
   text-align: center;
   margin-bottom: 3rem;
   padding-bottom: 2rem;
-  border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+  border-bottom: 2px solid rgba(191, 0, 255, 0.2);
 }
 
 .report-title h2 {
   margin: 0 0 0.5rem 0;
-  color: white;
+  color: #ffffff;
   font-size: 2rem;
   font-weight: 700;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .report-subtitle {
-  color: rgba(255, 255, 255, 0.9);
+  color: #ffffff;
   margin: 0 0 1rem 0;
   font-size: 1.1rem;
+  opacity: 0.9;
 }
 
 .report-date {
-  color: rgba(255, 255, 255, 0.8);
+  color: #ffffff;
   margin: 0;
   font-size: 0.9rem;
+  opacity: 0.7;
 }
 
 /* Stats Grid */
@@ -107,33 +98,35 @@
   border-radius: 12px;
   display: flex;
   gap: 1rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(191, 0, 255, 0.2);
   transition: all 0.3s ease;
 }
 
 .stat-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(191, 0, 255, 0.4);
+  transform: translateY(-2px);
 }
 
 .stat-economia {
-  border-color: rgba(76, 175, 80, 0.5);
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.2) 0%, rgba(76, 175, 80, 0.1) 100%);
+  border-color: rgba(76, 175, 80, 0.3);
 }
 
 .stat-atual {
-  border-color: rgba(255, 152, 0, 0.5);
+  background: linear-gradient(135deg, rgba(255, 152, 0, 0.2) 0%, rgba(255, 152, 0, 0.1) 100%);
+  border-color: rgba(255, 152, 0, 0.3);
 }
 
 .stat-otimo {
-  border-color: rgba(102, 126, 234, 0.5);
+  background: linear-gradient(135deg, rgba(33, 150, 243, 0.2) 0%, rgba(33, 150, 243, 0.1) 100%);
+  border-color: rgba(33, 150, 243, 0.3);
 }
 
 .stat-simulacoes {
-  border-color: rgba(118, 75, 162, 0.5);
+  background: linear-gradient(135deg, rgba(191, 0, 255, 0.2) 0%, rgba(0, 119, 255, 0.2) 100%);
+  border-color: rgba(191, 0, 255, 0.3);
 }
 
 .stat-icon {
@@ -144,15 +137,16 @@
 .stat-content h3 {
   margin: 0 0 0.5rem 0;
   font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: #ffffff;
   font-weight: 500;
+  opacity: 0.9;
 }
 
 .stat-value {
   margin: 0 0 0.5rem 0;
   font-size: 1.8rem;
   font-weight: 700;
-  color: white;
+  color: #ffffff;
 }
 
 .stat-badge {
@@ -169,23 +163,23 @@
 }
 
 .stat-label {
-  color: #666;
+  color: #ffffff;
   font-size: 0.85rem;
+  opacity: 0.8;
 }
 
 /* Comparison Chart */
 .comparison-chart {
   margin-bottom: 3rem;
   padding: 2rem;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(191, 0, 255, 0.15);
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .comparison-chart h3 {
   margin: 0 0 1.5rem 0;
-  color: white;
+  color: #ffffff;
   font-weight: 600;
 }
 
@@ -199,8 +193,9 @@
 
 .chart-label {
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
+  color: #ffffff;
   margin-bottom: 0.5rem;
+  opacity: 0.9;
 }
 
 .chart-bar-container {
@@ -208,7 +203,6 @@
   border-radius: 8px;
   overflow: hidden;
   height: 50px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .chart-bar {
@@ -237,18 +231,19 @@
 .chart-savings {
   text-align: center;
   padding: 1rem;
-  background: rgba(76, 175, 80, 0.2);
+  background: rgba(76, 175, 80, 0.1);
   border-radius: 8px;
-  border: 2px dashed rgba(76, 175, 80, 0.8);
+  border: 2px dashed rgba(76, 175, 80, 0.4);
 }
 
 .savings-label {
-  color: rgba(255, 255, 255, 0.9);
+  color: #ffffff;
   margin-right: 0.5rem;
+  opacity: 0.9;
 }
 
 .savings-value {
-  color: #4caf50;
+  color: #4ade80;
   font-size: 1.5rem;
   font-weight: 700;
 }
@@ -260,7 +255,7 @@
 
 .top-products h3 {
   margin: 0 0 1.5rem 0;
-  color: white;
+  color: #ffffff;
   font-weight: 600;
 }
 
@@ -275,25 +270,26 @@
   align-items: center;
   gap: 1rem;
   padding: 1.25rem;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(191, 0, 255, 0.2);
   border-radius: 12px;
-  border-left: 4px solid rgba(76, 175, 80, 0.8);
+  border-left: 4px solid #bf00ff;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .ranking-item:hover {
   transform: translateX(5px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(191, 0, 255, 0.4);
 }
 
 .ranking-position {
   font-size: 1.5rem;
   font-weight: 700;
-  color: white;
+  background: linear-gradient(135deg, #bf00ff 0%, #0077ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   min-width: 50px;
   text-align: center;
 }
@@ -304,25 +300,27 @@
 
 .ranking-info h4 {
   margin: 0 0 0.5rem 0;
-  color: white;
+  color: #ffffff;
   font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .ranking-details {
-  color: rgba(255, 255, 255, 0.8);
+  color: #ffffff;
   font-size: 0.9rem;
+  opacity: 0.8;
 }
 
 .separator {
   margin: 0 0.5rem;
-  color: #ccc;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .ranking-economy {
   text-align: right;
   font-size: 1.3rem;
   font-weight: 700;
-  color: #4caf50;
+  color: #4ade80;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -330,8 +328,9 @@
 
 .economy-percent {
   font-size: 0.85rem;
-  color: #666;
+  color: #ffffff;
   font-weight: 500;
+  opacity: 0.8;
 }
 
 /* Full Table */
@@ -341,23 +340,20 @@
 
 .full-table h3 {
   margin: 0 0 1.5rem 0;
-  color: white;
+  color: #ffffff;
   font-weight: 600;
 }
 
 .report-table {
   width: 100%;
   border-collapse: collapse;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .report-table thead {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #bf00ff 0%, #0077ff 100%);
   color: white;
 }
 
@@ -369,27 +365,27 @@
 
 .report-table td {
   padding: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid rgba(191, 0, 255, 0.1);
+  color: #ffffff;
 }
 
 .report-table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .report-table .product-name {
   font-weight: 500;
-  color: white;
+  color: #ffffff;
 }
 
 .report-table .highlight {
-  background: rgba(102, 126, 234, 0.2);
+  background: rgba(191, 0, 255, 0.2);
   font-weight: 600;
-  color: #4ade80;
+  color: #bf00ff;
 }
 
 .report-table .positive {
-  color: #4caf50;
+  color: #4ade80;
   font-weight: 600;
 }
 
@@ -400,13 +396,14 @@
 }
 
 .no-data p {
-  color: rgba(255, 255, 255, 0.8);
+  color: #ffffff;
   margin-bottom: 1.5rem;
   font-size: 1.1rem;
+  opacity: 0.9;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #bf00ff 0%, #0077ff 100%);
   color: white;
   border: none;
   padding: 0.75rem 2rem;
@@ -414,12 +411,11 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 15px rgba(191, 0, 255, 0.3);
 }
 
 /* Loading */
@@ -429,14 +425,14 @@
   align-items: center;
   justify-content: center;
   min-height: 60vh;
-  color: white;
+  color: #ffffff;
 }
 
 .spinner {
   width: 50px;
   height: 50px;
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
+  border: 4px solid rgba(191, 0, 255, 0.2);
+  border-top-color: #bf00ff;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
