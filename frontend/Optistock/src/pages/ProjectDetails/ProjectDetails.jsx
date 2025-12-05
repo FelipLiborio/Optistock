@@ -168,7 +168,10 @@ const ProjectDetails = () => {
               Nova Simulação
             </button>
             {simulacoes.length > 0 && (
-              <button className="btn-report" disabled>
+              <button 
+                className="btn-report" 
+                onClick={() => navigate(`/projeto/${id}/relatorio`)}
+              >
                 <AssessmentIcon sx={{ fontSize: 20 }} />
                 Relatório
               </button>

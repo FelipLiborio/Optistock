@@ -1,7 +1,7 @@
 /* Report Page */
 .report-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e8eaf6 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 2rem;
 }
 
@@ -11,55 +11,59 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
 }
 
 .report-header h1 {
   margin: 0;
-  color: #333;
+  color: white;
   font-size: 2rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .btn-back {
-  background: white;
-  border: 2px solid #e0e0e0;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
-  font-weight: 500;
-  color: #666;
+  font-weight: 600;
   transition: all 0.3s ease;
 }
 
 .btn-back:hover {
-  border-color: #bf00ff;
-  color: #bf00ff;
-  transform: translateX(-5px);
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateX(-3px);
 }
 
 .btn-export {
-  background: linear-gradient(135deg, #4caf50, #45a049);
-  color: white;
+  background: rgba(255, 255, 255, 0.95);
+  color: #667eea;
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .btn-export:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  background: white;
 }
 
 .report-content {
   max-width: 1200px;
   margin: 0 auto;
-  background: white;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
   border-radius: 16px;
   padding: 3rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* Report Title */
@@ -67,23 +71,25 @@
   text-align: center;
   margin-bottom: 3rem;
   padding-bottom: 2rem;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid rgba(102, 126, 234, 0.2);
 }
 
 .report-title h2 {
   margin: 0 0 0.5rem 0;
-  color: #333;
+  color: white;
   font-size: 2rem;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .report-subtitle {
-  color: #666;
+  color: rgba(255, 255, 255, 0.9);
   margin: 0 0 1rem 0;
   font-size: 1.1rem;
 }
 
 .report-date {
-  color: #999;
+  color: rgba(255, 255, 255, 0.8);
   margin: 0;
   font-size: 0.9rem;
 }
@@ -101,23 +107,33 @@
   border-radius: 12px;
   display: flex;
   gap: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .stat-economia {
-  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+  border-color: rgba(76, 175, 80, 0.5);
 }
 
 .stat-atual {
-  background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+  border-color: rgba(255, 152, 0, 0.5);
 }
 
 .stat-otimo {
-  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  border-color: rgba(102, 126, 234, 0.5);
 }
 
 .stat-simulacoes {
-  background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+  border-color: rgba(118, 75, 162, 0.5);
 }
 
 .stat-icon {
@@ -128,7 +144,7 @@
 .stat-content h3 {
   margin: 0 0 0.5rem 0;
   font-size: 0.95rem;
-  color: #666;
+  color: rgba(255, 255, 255, 0.8);
   font-weight: 500;
 }
 
@@ -136,7 +152,7 @@
   margin: 0 0 0.5rem 0;
   font-size: 1.8rem;
   font-weight: 700;
-  color: #333;
+  color: white;
 }
 
 .stat-badge {
@@ -161,13 +177,16 @@
 .comparison-chart {
   margin-bottom: 3rem;
   padding: 2rem;
-  background: #f8f9fa;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
   border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .comparison-chart h3 {
   margin: 0 0 1.5rem 0;
-  color: #333;
+  color: white;
+  font-weight: 600;
 }
 
 .chart-bars {
@@ -180,15 +199,16 @@
 
 .chart-label {
   font-weight: 500;
-  color: #666;
+  color: rgba(255, 255, 255, 0.9);
   margin-bottom: 0.5rem;
 }
 
 .chart-bar-container {
-  background: #e0e0e0;
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   overflow: hidden;
   height: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .chart-bar {
@@ -217,13 +237,13 @@
 .chart-savings {
   text-align: center;
   padding: 1rem;
-  background: white;
+  background: rgba(76, 175, 80, 0.2);
   border-radius: 8px;
-  border: 2px dashed #4caf50;
+  border: 2px dashed rgba(76, 175, 80, 0.8);
 }
 
 .savings-label {
-  color: #666;
+  color: rgba(255, 255, 255, 0.9);
   margin-right: 0.5rem;
 }
 
@@ -240,7 +260,8 @@
 
 .top-products h3 {
   margin: 0 0 1.5rem 0;
-  color: #333;
+  color: white;
+  font-weight: 600;
 }
 
 .ranking-list {
@@ -254,21 +275,25 @@
   align-items: center;
   gap: 1rem;
   padding: 1.25rem;
-  background: #f8f9fa;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
   border-radius: 12px;
-  border-left: 4px solid #4caf50;
+  border-left: 4px solid rgba(76, 175, 80, 0.8);
   transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .ranking-item:hover {
   transform: translateX(5px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .ranking-position {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #bf00ff;
+  color: white;
   min-width: 50px;
   text-align: center;
 }
@@ -279,12 +304,12 @@
 
 .ranking-info h4 {
   margin: 0 0 0.5rem 0;
-  color: #333;
+  color: white;
   font-size: 1.1rem;
 }
 
 .ranking-details {
-  color: #666;
+  color: rgba(255, 255, 255, 0.8);
   font-size: 0.9rem;
 }
 
@@ -316,17 +341,23 @@
 
 .full-table h3 {
   margin: 0 0 1.5rem 0;
-  color: #333;
+  color: white;
+  font-weight: 600;
 }
 
 .report-table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .report-table thead {
-  background: linear-gradient(135deg, #0077ff, #bf00ff);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
 }
 
@@ -338,22 +369,23 @@
 
 .report-table td {
   padding: 1rem;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .report-table tbody tr:hover {
-  background: #f8f9fa;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .report-table .product-name {
   font-weight: 500;
-  color: #333;
+  color: white;
 }
 
 .report-table .highlight {
-  background: #e3f2fd;
+  background: rgba(102, 126, 234, 0.2);
   font-weight: 600;
-  color: #0077ff;
+  color: #4ade80;
 }
 
 .report-table .positive {
@@ -368,13 +400,13 @@
 }
 
 .no-data p {
-  color: #666;
+  color: rgba(255, 255, 255, 0.8);
   margin-bottom: 1.5rem;
   font-size: 1.1rem;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #0077ff, #bf00ff);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
   padding: 0.75rem 2rem;
@@ -382,11 +414,12 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(191, 0, 255, 0.3);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
 /* Loading */
@@ -396,14 +429,14 @@
   align-items: center;
   justify-content: center;
   min-height: 60vh;
-  color: #666;
+  color: white;
 }
 
 .spinner {
   width: 50px;
   height: 50px;
-  border: 4px solid #f0f0f0;
-  border-top-color: #bf00ff;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }

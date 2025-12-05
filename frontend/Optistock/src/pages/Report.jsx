@@ -64,11 +64,6 @@ const Report = () => {
       .slice(0, 5);
   };
 
-  const handleExportPDF = () => {
-    // Simples print do navegador - em produção usar biblioteca como jsPDF
-    window.print();
-  };
-
   if (loading) {
     return (
       <div className="report-container">
@@ -89,9 +84,6 @@ const Report = () => {
           ← Voltar
         </button>
         <h1>📊 Relatório de Economia</h1>
-        <button className="btn-export" onClick={handleExportPDF}>
-          📄 Exportar PDF
-        </button>
       </div>
 
       <div className="report-content">
