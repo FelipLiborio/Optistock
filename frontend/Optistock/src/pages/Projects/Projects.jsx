@@ -1,13 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import projetoService from '../../services/projeto/projetoService';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import './Projects.css';
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [newProject, setNewProject] = useState({ nome_grupo: '', descricao: '' });
+  const [editingProject, setEditingProject] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,6 +58,31 @@ const Projects = () => {
     }
   };
 
+  const handleEditProject = (project) => {
+    setEditingProject({
+      id_grupo: project.id_grupo,
+      nome_grupo: project.nome_grupo,
+      descricao: project.descricao || ''
+    });
+    setShowEditModal(true);
+  };
+
+  const handleUpdateProject = async (e) => {
+    e.preventDefault();
+    try {
+      await projetoService.atualizarProjeto(editingProject.id_grupo, {
+        nome_grupo: editingProject.nome_grupo,
+        descricao: editingProject.descricao
+      });
+      setShowEditModal(false);
+      setEditingProject(null);
+      loadProjects();
+    } catch (error) {
+      console.error('Erro ao atualizar projeto:', error);
+      alert(error.message || 'Erro ao atualizar projeto. Tente novamente.');
+    }
+  };
+
   if (loading) {
     return (
       <div className="projects-page">
@@ -92,16 +123,28 @@ const Projects = () => {
               <div key={project.id_grupo} className="project-card">
                 <div className="project-header">
                   <h3 className="project-title">{project.nome_grupo}</h3>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteProject(project.id_grupo, project.nome_grupo);
-                    }}
-                    className="btn-delete"
-                    title="Excluir projeto"
-                  >
-                    ×
-                  </button>
+                  <div className="project-actions">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEditProject(project);
+                      }}
+                      className="btn-edit"
+                      title="Editar projeto"
+                    >
+                      <EditIcon sx={{ fontSize: 18 }} />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteProject(project.id_grupo, project.nome_grupo);
+                      }}
+                      className="btn-delete"
+                      title="Excluir projeto"
+                    >
+                      <DeleteIcon sx={{ fontSize: 18 }} />
+                    </button>
+                  </div>
                 </div>
                 
                 <p className="project-description">
@@ -111,7 +154,7 @@ const Projects = () => {
                 <div className="project-footer">
                   <div className="project-meta">
                     <span className="meta-item">
-                      <span className="meta-icon">📅</span>
+                      <CalendarMonthIcon sx={{ fontSize: 16, marginRight: '4px' }} />
                       {new Date(project.data_criacao).toLocaleDateString('pt-BR')}
                     </span>
                   </div>
@@ -120,8 +163,8 @@ const Projects = () => {
                     onClick={() => navigate(`/projeto/${project.id_grupo}`)}
                     className="btn-open-project"
                   >
+                    <FolderOpenIcon sx={{ fontSize: 18, marginRight: '4px' }} />
                     Abrir
-                    <span className="arrow">→</span>
                   </button>
                 </div>
               </div>
@@ -170,6 +213,53 @@ const Projects = () => {
                 </button>
                 <button type="submit" className="btn-submit">
                   Criar Projeto
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Editar Projeto */}
+      {showEditModal && editingProject && (
+        <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Editar Projeto</h3>
+              <button onClick={() => setShowEditModal(false)} className="modal-close">×</button>
+            </div>
+            
+            <form onSubmit={handleUpdateProject} className="modal-form">
+              <div className="form-group">
+                <label htmlFor="edit_nome_grupo">Nome do Projeto *</label>
+                <input
+                  type="text"
+                  id="edit_nome_grupo"
+                  value={editingProject.nome_grupo}
+                  onChange={(e) => setEditingProject({ ...editingProject, nome_grupo: e.target.value })}
+                  placeholder="Ex: Planejamento 2025"
+                  required
+                  autoFocus
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="edit_descricao">Descrição</label>
+                <textarea
+                  id="edit_descricao"
+                  value={editingProject.descricao}
+                  onChange={(e) => setEditingProject({ ...editingProject, descricao: e.target.value })}
+                  placeholder="Descreva o objetivo deste projeto..."
+                  rows="4"
+                />
+              </div>
+
+              <div className="modal-actions">
+                <button type="button" onClick={() => setShowEditModal(false)} className="btn-cancel">
+                  Cancelar
+                </button>
+                <button type="submit" className="btn-submit">
+                  Salvar Alterações
                 </button>
               </div>
             </form>

@@ -20,11 +20,11 @@ class AuthService {
         return data;
     }
 
-    async register(email, senha) {
-        const response = await fetch(`${API_BASE_URL}/auth/registrar`, {
+    async register(nome, email, senha) {
+        const response = await fetch(`${API_BASE_URL}/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, senha })
+            body: JSON.stringify({ nome, email, senha })
         });
 
         const data = await response.json();

@@ -8,7 +8,7 @@ import Register from './pages/auth/Register';
 import Home from './pages/Home/Home';
 import Projects from './pages/Projects/Projects';
 import About from './pages/About/About';
-import ProjectDetails from './pages/ProjectDetails';
+import ProjectDetails from './pages/ProjectDetails/ProjectDetails';
 import SimulationForm from './pages/SimulationForm';
 import Report from './pages/Report';
 import './App.css';

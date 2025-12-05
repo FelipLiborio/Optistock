@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import authService from '../../services/auth/authService';
+import HomeIcon from '@mui/icons-material/Home';
+import FolderIcon from '@mui/icons-material/Folder';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import InsightsIcon from '@mui/icons-material/Insights';
+import LogoutIcon from '@mui/icons-material/Logout';
 import './Sidebar.css';
 
 const Sidebar = () => {
@@ -17,19 +22,19 @@ const Sidebar = () => {
     { 
       id: 'home', 
       label: 'Início', 
-      icon: '🏠', 
+      icon: <HomeIcon />, 
       path: '/home' 
     },
     { 
       id: 'projects', 
       label: 'Projetos', 
-      icon: '📁', 
+      icon: <FolderIcon />, 
       path: '/projetos' 
     },
     { 
       id: 'about', 
       label: 'Sobre o LEC', 
-      icon: '📊', 
+      icon: <ShowChartIcon />, 
       path: '/sobre' 
     },
   ];
@@ -47,7 +52,7 @@ const Sidebar = () => {
     >
       <div className="sidebar-header">
         <div className="sidebar-logo">
-          <span className="logo-icon">📦</span>
+          <span className="logo-icon"><InsightsIcon /></span>
           {isExpanded && <span className="logo-text">OptiStock</span>}
         </div>
       </div>
@@ -72,7 +77,7 @@ const Sidebar = () => {
           onClick={handleLogout}
           title={!isExpanded ? 'Sair' : ''}
         >
-          <span className="item-icon">🚪</span>
+          <span className="item-icon"><LogoutIcon /></span>
           {isExpanded && <span className="item-label">Sair</span>}
         </button>
       </div>

@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import authService from '../../services/auth/authService';
 import projetoService from '../../services/projeto/projetoService';
+import FolderIcon from '@mui/icons-material/Folder';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import WavingHandIcon from '@mui/icons-material/WavingHand';
 import './Home.css';
 
 const Home = () => {
@@ -75,14 +79,14 @@ const Home = () => {
       <div className="home-container">
         <header className="dashboard-header">
           <h1>
-            {getGreeting()}, <span className="highlight">{getUserName()}</span>! 👋
+            {getGreeting()}, <span className="highlight">{getUserName()}</span>! <WavingHandIcon sx={{ fontSize: 48, verticalAlign: 'middle' }} />
           </h1>
           <p className="header-subtitle">Seja bem-vindo ao OptiStock</p>
         </header>
 
         <div className="stats-grid">
           <div className="stat-card">
-            <div className="stat-icon">📁</div>
+            <div className="stat-icon"><FolderIcon sx={{ fontSize: 48 }} /></div>
             <div className="stat-content">
               <span className="stat-number">{stats.totalProjects}</span>
               <span className="stat-label">Projeto{stats.totalProjects !== 1 ? 's' : ''} Ativo{stats.totalProjects !== 1 ? 's' : ''}</span>
@@ -90,7 +94,7 @@ const Home = () => {
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon">📅</div>
+            <div className="stat-icon"><CalendarMonthIcon sx={{ fontSize: 48 }} /></div>
             <div className="stat-content">
               <span className="stat-number">Membro desde</span>
               <span className="stat-label">{stats.memberSince}</span>
@@ -98,7 +102,7 @@ const Home = () => {
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon">📊</div>
+            <div className="stat-icon"><ShowChartIcon sx={{ fontSize: 48 }} /></div>
             <div className="stat-content">
               <span className="stat-number">Otimização LEC</span>
               <span className="stat-label">Fórmula de Wilson</span>
@@ -113,7 +117,7 @@ const Home = () => {
               className="action-card"
               onClick={() => navigate('/projetos')}
             >
-              <span className="action-icon">📁</span>
+              <span className="action-icon"><FolderIcon sx={{ fontSize: 48 }} /></span>
               <h3>Meus Projetos</h3>
               <p>Gerencie e visualize todos os seus projetos de otimização</p>
               <span className="action-arrow">→</span>
@@ -123,7 +127,7 @@ const Home = () => {
               className="action-card"
               onClick={() => navigate('/sobre')}
             >
-              <span className="action-icon">📊</span>
+              <span className="action-icon"><ShowChartIcon sx={{ fontSize: 48 }} /></span>
               <h3>Sobre o LEC</h3>
               <p>Entenda como funciona a otimização de estoque</p>
               <span className="action-arrow">→</span>

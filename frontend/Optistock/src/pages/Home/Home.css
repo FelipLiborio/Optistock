@@ -28,7 +28,7 @@
 
 .header-subtitle {
     font-size: 1.25rem;
-    color: #e0e0ff;
+    color: #ffffff;
     margin: 0;
 }
 
@@ -58,6 +58,10 @@
 
 .stat-icon {
     font-size: 3rem;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .stat-content {
@@ -75,7 +79,7 @@
 
 .stat-label {
     font-size: 0.95rem;
-    color: #d0d0ff;
+    color: #ffffff;
     font-weight: 500;
     margin-top: 0.25rem;
 }
@@ -133,8 +137,11 @@
 
 .action-icon {
     font-size: 3rem;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-bottom: 1rem;
+    color: #ffffff;
 }
 
 .action-card h3 {
@@ -146,7 +153,7 @@
 
 .action-card p {
     font-size: 1rem;
-    color: #d0d0ff;
+    color: #ffffff;
     line-height: 1.6;
     margin: 0 0 1rem 0;
 }

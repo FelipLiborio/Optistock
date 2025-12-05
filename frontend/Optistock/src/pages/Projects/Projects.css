@@ -157,6 +157,32 @@
     word-break: break-word;
 }
 
+.project-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.btn-edit {
+    background: rgba(0, 119, 255, 0.1);
+    color: #0077ff;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-edit:hover {
+    background: #0077ff;
+    color: white;
+    transform: scale(1.1);
+}
+
 .btn-delete {
     background: rgba(255, 107, 107, 0.1);
     color: #ff6b6b;
@@ -164,13 +190,11 @@
     width: 32px;
     height: 32px;
     border-radius: 8px;
-    font-size: 1.5rem;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
 }
 
 .btn-delete:hover {
@@ -180,7 +204,7 @@
 }
 
 .project-description {
-    color: #b8b8ff;
+    color: #ffffff;
     font-size: 1rem;
     line-height: 1.6;
     margin: 0 0 1.5rem 0;
@@ -204,7 +228,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: #b8b8ff;
+    color: #ffffff;
     font-size: 0.875rem;
 }
 
