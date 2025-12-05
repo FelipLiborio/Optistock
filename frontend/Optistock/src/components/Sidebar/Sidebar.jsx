@@ -4,7 +4,7 @@ import authService from '../../services/auth/authService';
 import HomeIcon from '@mui/icons-material/Home';
 import FolderIcon from '@mui/icons-material/Folder';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
-import InsightsIcon from '@mui/icons-material/Insights';
+import WarehouseIcon from '@mui/icons-material/Warehouse';
 import LogoutIcon from '@mui/icons-material/Logout';
 import './Sidebar.css';
 
@@ -52,7 +52,7 @@ const Sidebar = () => {
     >
       <div className="sidebar-header">
         <div className="sidebar-logo">
-          <span className="logo-icon"><InsightsIcon /></span>
+          <span className="logo-icon"><WarehouseIcon /></span>
           {isExpanded && <span className="logo-text">OptiStock</span>}
         </div>
       </div>

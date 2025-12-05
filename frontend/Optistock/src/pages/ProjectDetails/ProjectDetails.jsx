@@ -7,6 +7,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import SavingsIcon from '@mui/icons-material/Savings';
 import './ProjectDetails.css';
 
 const ProjectDetails = () => {
@@ -183,7 +184,9 @@ const ProjectDetails = () => {
               <span className="economia-label">Economia Total Anual</span>
               <span className="economia-value">{formatCurrency(calcularEconomiaTotal())}</span>
             </div>
-            <div className="economia-icon">💰</div>
+            <div className="economia-icon">
+              <SavingsIcon sx={{ fontSize: 64, color: '#4ade80' }} />
+            </div>
           </div>
         )}
 
