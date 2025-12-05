@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status, Header
+from fastapi import APIRouter, HTTPException, status, Depends
 from models.projeto import (
     ProjetoCriar,
     ProjetoAtualizar,
@@ -7,7 +7,7 @@ from models.projeto import (
 )
 from services.projeto import ProjetoService
 from services.simulacao import SimulacaoService
-from utils.auth import token_manager
+from utils.auth import obter_usuario_atual
 from typing import List
 
 router = APIRouter(prefix="/projetos", tags=["Projetos"])
@@ -17,22 +17,15 @@ simulacao_service = SimulacaoService()
 
 
 @router.post("/", response_model=ProjetoResponse, status_code=status.HTTP_201_CREATED)
-async def criar_projeto(projeto: ProjetoCriar, authorization: str = Header(None)):
+async def criar_projeto(
+    projeto: ProjetoCriar, 
+    id_usuario: int = Depends(obter_usuario_atual)
+):
     """
     Cria um novo projeto para o usuário autenticado.
     """
-    if not authorization or not authorization.startswith("Bearer "):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Token não fornecido"
-        )
-
-    token = authorization.replace("Bearer ", "")
-
     try:
-        id_usuario = token_manager.validar_token(token)
         return projeto_service.criar_projeto(projeto, id_usuario)
-    except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -41,22 +34,12 @@ async def criar_projeto(projeto: ProjetoCriar, authorization: str = Header(None)
 
 
 @router.get("/", response_model=List[ProjetoResponse])
-async def listar_projetos(authorization: str = Header(None)):
+async def listar_projetos(id_usuario: int = Depends(obter_usuario_atual)):
     """
     Lista todos os projetos do usuário autenticado.
     """
-    if not authorization or not authorization.startswith("Bearer "):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Token não fornecido"
-        )
-
-    token = authorization.replace("Bearer ", "")
-
     try:
-        id_usuario = token_manager.validar_token(token)
         return projeto_service.listar_projetos_usuario(id_usuario)
-    except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -65,19 +48,14 @@ async def listar_projetos(authorization: str = Header(None)):
 
 
 @router.get("/{id_grupo}", response_model=ProjetoComSimulacoesResponse)
-async def obter_projeto(id_grupo: int, authorization: str = Header(None)):
+async def obter_projeto(
+    id_grupo: int, 
+    id_usuario: int = Depends(obter_usuario_atual)
+):
     """
     Obtém um projeto específico do usuário autenticado com suas simulações.
     """
-    if not authorization or not authorization.startswith("Bearer "):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Token não fornecido"
-        )
-
-    token = authorization.replace("Bearer ", "")
-
     try:
-        id_usuario = token_manager.validar_token(token)
         projeto = projeto_service.obter_projeto(id_grupo, id_usuario)
 
         if not projeto:
@@ -97,8 +75,6 @@ async def obter_projeto(id_grupo: int, authorization: str = Header(None)):
             data_criacao=projeto.data_criacao,
             simulacoes=simulacoes,
         )
-    except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
     except HTTPException:
         raise
     except Exception as e:
@@ -110,20 +86,14 @@ async def obter_projeto(id_grupo: int, authorization: str = Header(None)):
 
 @router.put("/{id_grupo}", response_model=ProjetoResponse)
 async def atualizar_projeto(
-    id_grupo: int, dados: ProjetoAtualizar, authorization: str = Header(None)
+    id_grupo: int, 
+    dados: ProjetoAtualizar, 
+    id_usuario: int = Depends(obter_usuario_atual)
 ):
     """
     Atualiza um projeto do usuário autenticado.
     """
-    if not authorization or not authorization.startswith("Bearer "):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Token não fornecido"
-        )
-
-    token = authorization.replace("Bearer ", "")
-
     try:
-        id_usuario = token_manager.validar_token(token)
         projeto = projeto_service.atualizar_projeto(id_grupo, id_usuario, dados)
 
         if not projeto:
@@ -132,8 +102,6 @@ async def atualizar_projeto(
             )
 
         return projeto
-    except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
     except HTTPException:
         raise
     except Exception as e:
@@ -144,19 +112,14 @@ async def atualizar_projeto(
 
 
 @router.delete("/{id_grupo}", status_code=status.HTTP_204_NO_CONTENT)
-async def deletar_projeto(id_grupo: int, authorization: str = Header(None)):
+async def deletar_projeto(
+    id_grupo: int, 
+    id_usuario: int = Depends(obter_usuario_atual)
+):
     """
     Deleta um projeto do usuário autenticado.
     """
-    if not authorization or not authorization.startswith("Bearer "):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Token não fornecido"
-        )
-
-    token = authorization.replace("Bearer ", "")
-
     try:
-        id_usuario = token_manager.validar_token(token)
         deletado = projeto_service.deletar_projeto(id_grupo, id_usuario)
 
         if not deletado:
@@ -165,8 +128,6 @@ async def deletar_projeto(id_grupo: int, authorization: str = Header(None)):
             )
 
         return None
-    except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
     except HTTPException:
         raise
     except Exception as e:
