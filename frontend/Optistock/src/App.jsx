@@ -1,11 +1,16 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
+import NotFoundRedirect from './components/NotFoundRedirect';
+import Layout from './components/Layout/Layout';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
-import ProjectList from './pages/ProjectList';
+import Home from './pages/Home/Home';
+import Projects from './pages/Projects/Projects';
+import About from './pages/About/About';
 import ProjectDetails from './pages/ProjectDetails';
 import SimulationForm from './pages/SimulationForm';
+import Report from './pages/Report';
 import './App.css';
 
 function App() {
@@ -16,10 +21,34 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route
+            path="/"
+            element={
+              <PrivateRoute>
+                <Layout><Home /></Layout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/home"
+            element={
+              <PrivateRoute>
+                <Layout><Home /></Layout>
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/projetos"
             element={
               <PrivateRoute>
-                <ProjectList />
+                <Layout><Projects /></Layout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/sobre"
+            element={
+              <PrivateRoute>
+                <Layout><About /></Layout>
               </PrivateRoute>
             }
           />
@@ -27,7 +56,7 @@ function App() {
             path="/projeto/:id"
             element={
               <PrivateRoute>
-                <ProjectDetails />
+                <Layout><ProjectDetails /></Layout>
               </PrivateRoute>
             }
           />
@@ -35,11 +64,19 @@ function App() {
             path="/projeto/:id/nova-simulacao"
             element={
               <PrivateRoute>
-                <SimulationForm />
+                <Layout><SimulationForm /></Layout>
               </PrivateRoute>
             }
           />
-          <Route path="/" element={<Navigate to="/projetos" replace />} />
+          <Route
+            path="/projeto/:id/relatorio"
+            element={
+              <PrivateRoute>
+                <Layout><Report /></Layout>
+              </PrivateRoute>
+            }
+          />
+          <Route path="*" element={<NotFoundRedirect />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
@@ -47,4 +84,5 @@ function App() {
 }
 
 export default App;
+
 

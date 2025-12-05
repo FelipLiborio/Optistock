@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { authService } from '../services/authService';
+import authService from '../services/auth/authService';
 
 const AuthContext = createContext(null);
 
@@ -15,14 +15,17 @@ export const AuthProvider = ({ children }) => {
   const checkAuth = async () => {
     try {
       const token = authService.getToken();
-      if (token) {
-        const userData = await authService.getUserData(token);
+      if (token && !authService.isTokenExpired(token)) {
+        const userData = authService.getUserDataFromToken(token);
         setUser(userData);
         setIsAuthenticated(true);
+      } else {
+        authService.removeToken();
+        setIsAuthenticated(false);
       }
     } catch (error) {
       console.error('Erro ao verificar autenticação:', error);
-      authService.logout();
+      authService.removeToken();
       setIsAuthenticated(false);
     } finally {
       setLoading(false);
@@ -32,8 +35,8 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, senha) => {
     try {
       const response = await authService.login(email, senha);
-      const token = authService.getToken();
-      const userData = await authService.getUserData(token);
+      authService.setToken(response.token);
+      const userData = authService.getUserDataFromToken(response.token);
       setUser(userData);
       setIsAuthenticated(true);
       return response;
@@ -44,9 +47,9 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (nome, email, senha) => {
     try {
-      const response = await authService.register(nome, email, senha);
-      const token = authService.getToken();
-      const userData = await authService.getUserData(token);
+      const response = await authService.register(email, senha);
+      authService.setToken(response.token);
+      const userData = authService.getUserDataFromToken(response.token);
       setUser(userData);
       setIsAuthenticated(true);
       return response;
@@ -56,7 +59,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    authService.logout();
+    authService.removeToken();
     setUser(null);
     setIsAuthenticated(false);
   };
@@ -80,3 +83,4 @@ export const useAuth = () => {
   }
   return context;
 };
+

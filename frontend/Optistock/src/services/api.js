@@ -8,11 +8,17 @@ class ApiClient {
         this.baseURL = baseURL;
     }
 
+    getAuthHeaders() {
+        const token = localStorage.getItem('token');
+        return token ? { 'Authorization': `Bearer ${token}` } : {};
+    }
+
     async request(endpoint, options = {}) {
         const url = `${this.baseURL}${endpoint}`;
         const config = {
             headers: {
                 'Content-Type': 'application/json',
+                ...this.getAuthHeaders(),
                 ...options.headers,
             },
             ...options,
@@ -20,6 +26,12 @@ class ApiClient {
 
         try {
             const response = await fetch(url, config);
+
+            // No content responses
+            if (response.status === 204) {
+                return null;
+            }
+
             const data = await response.json();
 
             if (!response.ok) {

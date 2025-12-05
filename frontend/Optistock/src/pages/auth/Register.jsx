@@ -31,7 +31,7 @@ const Register = () => {
 
     try {
       await register(nome, email, senha);
-      navigate('/dashboard');
+      navigate('/');
     } catch (err) {
       setError(err.message || 'Erro ao criar conta');
     } finally {
