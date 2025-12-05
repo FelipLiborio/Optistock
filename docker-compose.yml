@@ -1,0 +1,20 @@
+version: '3.8'
+
+name: optistock
+
+services:
+  backend:
+    build: ./backend
+    container_name: optistock-backend
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build: ./frontend/Optistock
+    container_name: optistock-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+
