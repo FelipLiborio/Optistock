@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { apiClient } from '../services/api';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceDot } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceDot, Area, ComposedChart, ReferenceArea } from 'recharts';
 import './SimulationForm.css';
 
 const SimulationForm = () => {
@@ -24,18 +24,31 @@ const SimulationForm = () => {
     return (D * S) / Q + (Q * H) / 2;
   };
 
+  const calculateOrderingCost = (D, S, Q) => {
+    return (D * S) / Q;
+  };
+
+  const calculateHoldingCost = (H, Q) => {
+    return (Q * H) / 2;
+  };
+
   const generateChartData = (D, S, H, eoq) => {
     const data = [];
     const minQ = Math.max(1, Math.floor(eoq * 0.3));
     const maxQ = Math.ceil(eoq * 2);
-    const step = Math.ceil((maxQ - minQ) / 50);
+    const step = Math.max(1, Math.ceil((maxQ - minQ) / 50));
 
     for (let Q = minQ; Q <= maxQ; Q += step) {
-      const cost = calculateTotalCost(D, S, H, Q);
+      const totalCost = calculateTotalCost(D, S, H, Q);
+      const orderingCost = calculateOrderingCost(D, S, Q);
+      const holdingCost = calculateHoldingCost(H, Q);
+      
       data.push({
         Q: Q,
-        custo: Math.round(cost),
-        isOptimal: Math.abs(Q - eoq) < step
+        custoTotal: Math.round(totalCost),
+        custoPedido: Math.round(orderingCost),
+        custoManutencao: Math.round(holdingCost),
+        isOptimal: Math.abs(Q - eoq) < step * 2
       });
     }
 
@@ -114,10 +127,26 @@ const SimulationForm = () => {
 
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
+      const data = payload[0].payload;
       return (
         <div className="custom-tooltip">
-          <p className="label">{`Quantidade: ${payload[0].payload.Q} unidades`}</p>
-          <p className="value">{`Custo Total: ${formatCurrency(payload[0].value)}`}</p>
+          <p className="tooltip-title">📊 Quantidade: {data.Q} unidades</p>
+          <div className="tooltip-divider"></div>
+          <p className="tooltip-item total">
+            <span className="tooltip-label">💰 Custo Total:</span>
+            <span className="tooltip-value">{formatCurrency(data.custoTotal)}</span>
+          </p>
+          <p className="tooltip-item">
+            <span className="tooltip-label">📦 Custo de Pedido:</span>
+            <span className="tooltip-value">{formatCurrency(data.custoPedido)}</span>
+          </p>
+          <p className="tooltip-item">
+            <span className="tooltip-label">🏪 Custo de Manutenção:</span>
+            <span className="tooltip-value">{formatCurrency(data.custoManutencao)}</span>
+          </p>
+          {data.isOptimal && (
+            <p className="tooltip-optimal">⭐ Ponto Ótimo!</p>
+          )}
         </div>
       );
     }
@@ -253,48 +282,118 @@ const SimulationForm = () => {
             </div>
 
             <div className="chart-card">
-              <h2>📊 Curva de Custo Total</h2>
+              <h2>📊 Curva de Custo Total (Formato "U")</h2>
               <p className="chart-description">
-                O gráfico mostra como o custo total varia com a quantidade do pedido. 
-                O ponto mínimo (destacado) representa o lote econômico ideal.
+                <strong>A Fórmula de Wilson em ação!</strong> O gráfico mostra a curva característica em forma de "U", 
+                onde o custo total diminui até o ponto ótimo e depois volta a subir. 
+                O ponto dourado ⭐ marca o <strong>Lote Econômico de Compra (Q* = {results.eoq})</strong>, 
+                que minimiza os custos totais.
               </p>
-              <ResponsiveContainer width="100%" height={400}>
-                <LineChart data={results.chartData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+              <ResponsiveContainer width="100%" height={450}>
+                <ComposedChart data={results.chartData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                  <defs>
+                    <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#4ade80" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#4ade80" stopOpacity={0.05}/>
+                    </linearGradient>
+                  </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                   <XAxis 
                     dataKey="Q" 
-                    label={{ value: 'Quantidade do Pedido (Q)', position: 'insideBottom', offset: -10, fill: '#fff' }}
+                    label={{ value: 'Quantidade do Pedido (Q)', position: 'insideBottom', offset: -10, fill: '#fff', fontSize: 14 }}
                     stroke="#fff"
+                    tick={{ fill: '#fff' }}
                   />
                   <YAxis 
-                    label={{ value: 'Custo Total (R$)', angle: -90, position: 'insideLeft', fill: '#fff' }}
+                    label={{ value: 'Custo (R$)', angle: -90, position: 'insideLeft', fill: '#fff', fontSize: 14 }}
                     stroke="#fff"
+                    tick={{ fill: '#fff' }}
                   />
                   <Tooltip content={<CustomTooltip />} />
-                  <Legend wrapperStyle={{ color: '#fff' }} />
+                  <Legend 
+                    wrapperStyle={{ color: '#fff', paddingTop: '10px' }}
+                    iconType="line"
+                  />
+                  
+                  {/* Área sombreada para destacar a zona ótima */}
+                  <ReferenceArea
+                    x1={Math.max(1, results.eoq - results.eoq * 0.1)}
+                    x2={results.eoq + results.eoq * 0.1}
+                    fill="#fbbf24"
+                    fillOpacity={0.1}
+                    stroke="#fbbf24"
+                    strokeDasharray="3 3"
+                  />
+                  
+                  {/* Área do custo total */}
+                  <Area
+                    type="monotone"
+                    dataKey="custoTotal"
+                    fill="url(#colorTotal)"
+                    stroke="none"
+                  />
+                  
+                  {/* Linhas de custo */}
                   <Line 
                     type="monotone" 
-                    dataKey="custo" 
+                    dataKey="custoTotal" 
                     stroke="#4ade80" 
-                    strokeWidth={3}
+                    strokeWidth={4}
                     dot={false}
-                    name="Custo Total"
+                    name="💰 Custo Total"
+                    activeDot={{ r: 6, fill: '#4ade80', stroke: '#fff', strokeWidth: 2 }}
                   />
+                  <Line 
+                    type="monotone" 
+                    dataKey="custoPedido" 
+                    stroke="#60a5fa" 
+                    strokeWidth={2}
+                    strokeDasharray="5 5"
+                    dot={false}
+                    name="📦 Custo de Pedido"
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="custoManutencao" 
+                    stroke="#f472b6" 
+                    strokeWidth={2}
+                    strokeDasharray="5 5"
+                    dot={false}
+                    name="🏪 Custo de Manutenção"
+                  />
+                  
+                  {/* Ponto ótimo destacado */}
                   <ReferenceDot 
                     x={results.eoq} 
                     y={results.minCost} 
-                    r={8} 
+                    r={10} 
                     fill="#fbbf24" 
                     stroke="#fff"
-                    strokeWidth={2}
+                    strokeWidth={3}
+                    label={{ value: '⭐', position: 'top', fill: '#fbbf24', fontSize: 20, offset: 10 }}
                   />
-                </LineChart>
+                </ComposedChart>
               </ResponsiveContainer>
-              <div className="chart-legend">
-                <span className="legend-item">
+              <div className="chart-legend-extended">
+                <div className="legend-group">
+                  <span className="legend-item">
+                    <span className="legend-line total"></span>
+                    Custo Total (U-shaped)
+                  </span>
+                  <span className="legend-item">
+                    <span className="legend-line pedido"></span>
+                    Custo de Pedido (decresce)
+                  </span>
+                  <span className="legend-item">
+                    <span className="legend-line manutencao"></span>
+                    Custo de Manutenção (cresce)
+                  </span>
+                </div>
+                <div className="optimal-info">
                   <span className="legend-dot optimal"></span>
-                  Ponto Ótimo (Q* = {results.eoq})
-                </span>
+                  <strong>Ponto Ótimo: Q* = {results.eoq} unidades</strong>
+                  <span className="optimal-cost">{formatCurrency(results.minCost)}/ano</span>
+                </div>
               </div>
             </div>
 
