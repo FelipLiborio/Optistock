@@ -179,7 +179,7 @@ O **OptiStock** segue uma arquitetura **Full Stack moderna** com separação cla
 | **Backend** | Python 3.11+ | Linguagem principal |
 | | FastAPI | Framework REST API |
 | | SymPy | Cálculo simbólico |
-| | SQLAlchemy | ORM |
+| | Psycopg2 | Comunicação com PostgreSQL |
 | | Pydantic | Validação de dados |
 | | Uvicorn | Servidor ASGI |
 | **Banco de Dados** | PostgreSQL 16 | Persistência relacional |
@@ -204,10 +204,17 @@ O **OptiStock** segue uma arquitetura **Full Stack moderna** com separação cla
 git clone https://github.com/FelipLiborio/Optistock.git
 cd Optistock
 
-# 2. Suba os containers
+# 2. Configure as variáveis de ambiente
+# Crie um arquivo .env na pasta backend/ com as seguintes variáveis:
+# DATABASE_URL=postgresql://user:password@db:5432/optistock
+# SECRET_KEY=sua-chave-secreta-aqui
+# ALGORITHM=HS256
+# ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+# 3. Suba os containers
 docker-compose up --build
 
-# 3. Aguarde a inicialização (pode levar 2-3 minutos)
+# 4. Aguarde a inicialização (pode levar 2-3 minutos)
 ```
 
 **Acesse as aplicações:**
@@ -328,8 +335,8 @@ Optistock/
 ├── backend/                    # API REST em Python
 │   ├── main.py                # Ponto de entrada da aplicação
 │   ├── requirements.txt       # Dependências Python
-│   ├── Connections/           # Conexão com banco de dados
-│   ├── models/                # Modelos Pydantic/SQLAlchemy
+│   ├── Connections/           # Conexão com banco de dados (Psycopg2)
+│   ├── models/                # Modelos Pydantic
 │   ├── routes/                # Endpoints da API
 │   ├── services/              # Lógica de negócio
 │   └── utils/                 # Utilitários (auth, cálculos)
