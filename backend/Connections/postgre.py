@@ -1,9 +1,12 @@
 import os
 import psycopg2
 from typing import Optional
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
-class DatabaseConnection:
+class postgreConnection:
     """
     Classe responsável por gerenciar a conexão com o banco de dados PostgreSQL.
     As credenciais são obtidas das variáveis de ambiente.
