@@ -1,6 +1,6 @@
 from Connections.postgre import postgreConnection
 from models.auth import UsuarioRegistro, UsuarioLogin, TokenResponse, UsuarioResponse
-from utils.auth import TokenManager
+from utils.auth import token_manager
 import hashlib
 import psycopg2.extras
 from typing import Optional
@@ -16,7 +16,6 @@ class AuthService:
         Inicializa o serviço de autenticação.
         """
         self.db = postgreConnection()
-        self.token_manager = TokenManager()
 
     def _hash_senha(self, senha: str) -> str:
         """
@@ -70,7 +69,7 @@ class AuthService:
             result = cursor.fetchone()
             conn.commit()
 
-            token = self.token_manager.criar_token(result["id_usuario"])
+            token = token_manager.criar_token(result["id_usuario"])
 
             return TokenResponse(token=token, mensagem="Usuário registrado com sucesso")
         except ValueError:
@@ -116,7 +115,7 @@ class AuthService:
             if not usuario:
                 raise ValueError("Email ou senha inválidos")
 
-            token = self.token_manager.criar_token(usuario["id_usuario"])
+            token = token_manager.criar_token(usuario["id_usuario"])
 
             return TokenResponse(token=token, mensagem="Login realizado com sucesso")
         except ValueError:
@@ -141,7 +140,7 @@ class AuthService:
 
         try:
             # Valida o token e obtém o ID
-            id_usuario = self.token_manager.validar_token(token)
+            id_usuario = token_manager.validar_token(token)
 
             cursor.execute(
                 """

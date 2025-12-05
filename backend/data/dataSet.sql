@@ -8,11 +8,6 @@ CREATE TABLE usuarios (
     data_criacao TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
--- =========================================
--- 2. TABELA DE GRUPOS
--- Cada usuário pode ter vários grupos
--- Ex.: "Estoque", "Finanças", "Pedidos", etc.
--- =========================================
 CREATE TABLE grupos (
     id_grupo SERIAL PRIMARY KEY,
 
@@ -27,26 +22,30 @@ CREATE TABLE grupos (
         ON DELETE CASCADE
 );
 
--- =========================================
--- 3. TABELA DE ITENS DO GRUPO
--- Aqui entram os parâmetros usados nos cálculos,
--- como D, S, H do EOQ ou qualquer variável futura.
--- =========================================
-CREATE TABLE itens (
-    id_item SERIAL PRIMARY KEY,
+CREATE TABLE simulacoes (
 
-    id_grupo INTEGER NOT NULL,
-    nome_item VARCHAR(120) NOT NULL,
-    descricao TEXT,
+    id SERIAL PRIMARY KEY,
 
-    -- Campos genéricos para armazenar parâmetros
-    valor1 NUMERIC(12,4),
-    valor2 NUMERIC(12,4),
-    valor3 NUMERIC(12,4),
+    id_projeto INTEGER NOT NULL,
 
-    data_criacao TIMESTAMP NOT NULL DEFAULT NOW(),
 
-    FOREIGN KEY (id_grupo)
-        REFERENCES grupos (id_grupo)
+    nome_produto VARCHAR(255) NOT NULL,
+    demanda_anual NUMERIC(10, 2) NOT NULL,
+    custo_pedido NUMERIC(10, 2) NOT NULL,
+    custo_manutencao NUMERIC(10, 2) NOT NULL,
+    lote_atual_empresa NUMERIC(10, 2),
+
+    lote_otimo_calculado NUMERIC(10, 2) NOT NULL,
+    custo_total_atual NUMERIC(10, 2),
+    custo_total_otimo NUMERIC(10, 2) NOT NULL,
+    economia_anual NUMERIC(10, 2),
+
+    data_simulacao TIMESTAMP DEFAULT NOW(),
+
+    
+    CONSTRAINT fk_simulacao_projeto
+        FOREIGN KEY (id_projeto)
+        REFERENCES projeto (id_grupo)
         ON DELETE CASCADE
 );
+
