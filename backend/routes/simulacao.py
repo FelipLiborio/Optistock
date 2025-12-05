@@ -1,5 +1,11 @@
 from fastapi import APIRouter, HTTPException, status, Depends
-from models.simulacao import SimulacaoCriar, SimulacaoAtualizar, SimulacaoResponse
+from models.simulacao import (
+    SimulacaoCriar,
+    SimulacaoAtualizar,
+    SimulacaoResponse,
+    AnaliseMatematicaResponse,
+    DadosGraficoResponse,
+)
 from services.simulacao import SimulacaoService
 from services.projeto import ProjetoService
 from utils.auth import obter_usuario_atual
@@ -40,7 +46,73 @@ async def criar_simulacao(
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Erro ao criar simulação: {str(e)}",
+            detail=f"Erro ao deletar simulação: {str(e)}",
+        )
+
+
+@router.get(
+    "/{id_simulacao}/analise-matematica", response_model=AnaliseMatematicaResponse
+)
+async def obter_analise_matematica(
+    id_projeto: int, id_simulacao: int, id_usuario: int = Depends(obter_usuario_atual)
+):
+    """
+    Obtém análise matemática detalhada de uma simulação.
+    Inclui derivadas, pontos críticos, verificação de otimalidade.
+    """
+    try:
+        validar_acesso_projeto(id_projeto, id_usuario)
+        analise = simulacao_service.gerar_analise_matematica_detalhada(
+            id_simulacao, id_projeto
+        )
+
+        if not analise:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Simulação não encontrada",
+            )
+
+        return AnaliseMatematicaResponse(**analise)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erro ao gerar análise matemática: {str(e)}",
+        )
+
+
+@router.get("/{id_simulacao}/grafico", response_model=DadosGraficoResponse)
+async def obter_dados_grafico(
+    id_projeto: int,
+    id_simulacao: int,
+    q_min: float = 10,
+    q_max: float = 200,
+    pontos: int = 100,
+    id_usuario: int = Depends(obter_usuario_atual),
+):
+    """
+    Obtém dados para plotagem do gráfico de custo x lote.
+    """
+    try:
+        validar_acesso_projeto(id_projeto, id_usuario)
+        dados = simulacao_service.gerar_dados_grafico(
+            id_simulacao, id_projeto, q_min, q_max, pontos
+        )
+
+        if not dados:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Simulação não encontrada",
+            )
+
+        return DadosGraficoResponse(**dados)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erro ao gerar dados do gráfico: {str(e)}",
         )
 
 

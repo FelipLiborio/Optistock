@@ -1,7 +1,7 @@
 from Connections.postgre import postgreConnection
 from models.simulacao import SimulacaoCriar, SimulacaoAtualizar, SimulacaoResponse
-from typing import List, Optional
-import math
+from utils.lote_economico import CalculadoraLoteEconomico
+from typing import List, Optional, Dict, Any
 
 
 class SimulacaoService:
@@ -12,76 +12,26 @@ class SimulacaoService:
     def __init__(self):
         self.db = postgreConnection()
 
-    def calcular_lote_economico(
-        self, demanda_anual: float, custo_pedido: float, custo_manutencao: float
-    ) -> float:
-        """
-        Calcula o Lote Econômico de Compra (LEC) usando a fórmula de Wilson.
-        LEC = sqrt((2 * D * S) / H)
-        onde:
-        D = demanda anual
-        S = custo por pedido
-        H = custo de manutenção por unidade por ano
-        """
-        lec = math.sqrt((2 * demanda_anual * custo_pedido) / custo_manutencao)
-        return round(lec, 2)
-
-    def calcular_custo_total(
-        self,
-        demanda_anual: float,
-        custo_pedido: float,
-        custo_manutencao: float,
-        lote: float,
-    ) -> float:
-        """
-        Calcula o custo total anual.
-        CT = (D/Q) * S + (Q/2) * H
-        onde:
-        D = demanda anual
-        Q = tamanho do lote
-        S = custo por pedido
-        H = custo de manutenção por unidade por ano
-        """
-        custo_pedidos = (demanda_anual / lote) * custo_pedido
-        custo_estoque = (lote / 2) * custo_manutencao
-        return round(custo_pedidos + custo_estoque, 2)
-
     def criar_simulacao(
         self, simulacao: SimulacaoCriar, id_projeto: int
     ) -> SimulacaoResponse:
         """
-        Cria uma nova simulação.
+        Cria uma nova simulação usando SymPy para cálculos matemáticos.
         """
         conn = self.db.get_connection()
         cursor = conn.cursor()
 
         try:
-            # Calcula o lote ótimo
-            lote_otimo = self.calcular_lote_economico(
-                simulacao.demanda_anual,
-                simulacao.custo_pedido,
-                simulacao.custo_manutencao,
+            # Cria calculadora com SymPy
+            calculadora = CalculadoraLoteEconomico(
+                demanda_anual=simulacao.demanda_anual,
+                custo_pedido=simulacao.custo_pedido,
+                custo_manutencao=simulacao.custo_manutencao,
+                lote_atual=simulacao.lote_atual_empresa,
             )
 
-            # Calcula custo total ótimo
-            custo_total_otimo = self.calcular_custo_total(
-                simulacao.demanda_anual,
-                simulacao.custo_pedido,
-                simulacao.custo_manutencao,
-                lote_otimo,
-            )
-
-            # Calcula custo total atual e economia (se lote atual foi fornecido)
-            custo_total_atual = None
-            economia_anual = None
-            if simulacao.lote_atual_empresa:
-                custo_total_atual = self.calcular_custo_total(
-                    simulacao.demanda_anual,
-                    simulacao.custo_pedido,
-                    simulacao.custo_manutencao,
-                    simulacao.lote_atual_empresa,
-                )
-                economia_anual = round(custo_total_atual - custo_total_otimo, 2)
+            # Gera análise completa usando SymPy
+            analise = calculadora.gerar_analise_completa()
 
             query = """
                 INSERT INTO simulacoes (
@@ -101,11 +51,26 @@ class SimulacaoService:
                     simulacao.demanda_anual,
                     simulacao.custo_pedido,
                     simulacao.custo_manutencao,
-                    simulacao.lote_atual_empresa,
-                    lote_otimo,
-                    custo_total_atual,
-                    custo_total_otimo,
-                    economia_anual,
+                    analise["lote_atual_empresa"],
+                    analise["lote_otimo_calculado"],
+                    analise["custo_total_atual"],
+                    analise["custo_total_otimo"],
+                    analise["economia_anual"],
+                ),
+            )
+            cursor.execute(
+                query,
+                (
+                    id_projeto,
+                    simulacao.nome_produto,
+                    simulacao.demanda_anual,
+                    simulacao.custo_pedido,
+                    simulacao.custo_manutencao,
+                    analise["lote_atual_empresa"],
+                    analise["lote_otimo_calculado"],
+                    analise["custo_total_atual"],
+                    analise["custo_total_otimo"],
+                    analise["economia_anual"],
                 ),
             )
 
@@ -119,11 +84,11 @@ class SimulacaoService:
                 demanda_anual=simulacao.demanda_anual,
                 custo_pedido=simulacao.custo_pedido,
                 custo_manutencao=simulacao.custo_manutencao,
-                lote_atual_empresa=simulacao.lote_atual_empresa,
-                lote_otimo_calculado=lote_otimo,
-                custo_total_atual=custo_total_atual,
-                custo_total_otimo=custo_total_otimo,
-                economia_anual=economia_anual,
+                lote_atual_empresa=analise["lote_atual_empresa"],
+                lote_otimo_calculado=analise["lote_otimo_calculado"],
+                custo_total_atual=analise["custo_total_atual"],
+                custo_total_otimo=analise["custo_total_otimo"],
+                economia_anual=analise["economia_anual"],
                 data_simulacao=result[1],
             )
 
@@ -219,7 +184,7 @@ class SimulacaoService:
         self, id_simulacao: int, id_projeto: int, dados: SimulacaoAtualizar
     ) -> Optional[SimulacaoResponse]:
         """
-        Atualiza uma simulação.
+        Atualiza uma simulação usando SymPy para recalcular valores.
         """
         conn = self.db.get_connection()
         cursor = conn.cursor()
@@ -243,22 +208,15 @@ class SimulacaoService:
                 else simulacao_atual.lote_atual_empresa
             )
 
-            # Recalcula valores
-            lote_otimo = self.calcular_lote_economico(
-                demanda_anual, custo_pedido, custo_manutencao
+            # Recalcula usando SymPy
+            calculadora = CalculadoraLoteEconomico(
+                demanda_anual=demanda_anual,
+                custo_pedido=custo_pedido,
+                custo_manutencao=custo_manutencao,
+                lote_atual=lote_atual_empresa,
             )
 
-            custo_total_otimo = self.calcular_custo_total(
-                demanda_anual, custo_pedido, custo_manutencao, lote_otimo
-            )
-
-            custo_total_atual = None
-            economia_anual = None
-            if lote_atual_empresa:
-                custo_total_atual = self.calcular_custo_total(
-                    demanda_anual, custo_pedido, custo_manutencao, lote_atual_empresa
-                )
-                economia_anual = round(custo_total_atual - custo_total_otimo, 2)
+            analise = calculadora.gerar_analise_completa()
 
             query = """
                 UPDATE simulacoes
@@ -282,11 +240,11 @@ class SimulacaoService:
                     demanda_anual,
                     custo_pedido,
                     custo_manutencao,
-                    lote_atual_empresa,
-                    lote_otimo,
-                    custo_total_atual,
-                    custo_total_otimo,
-                    economia_anual,
+                    analise["lote_atual_empresa"],
+                    analise["lote_otimo_calculado"],
+                    analise["custo_total_atual"],
+                    analise["custo_total_otimo"],
+                    analise["economia_anual"],
                     id_simulacao,
                     id_projeto,
                 ),
@@ -305,11 +263,11 @@ class SimulacaoService:
                 demanda_anual=demanda_anual,
                 custo_pedido=custo_pedido,
                 custo_manutencao=custo_manutencao,
-                lote_atual_empresa=lote_atual_empresa,
-                lote_otimo_calculado=lote_otimo,
-                custo_total_atual=custo_total_atual,
-                custo_total_otimo=custo_total_otimo,
-                economia_anual=economia_anual,
+                lote_atual_empresa=analise["lote_atual_empresa"],
+                lote_otimo_calculado=analise["lote_otimo_calculado"],
+                custo_total_atual=analise["custo_total_atual"],
+                custo_total_otimo=analise["custo_total_otimo"],
+                economia_anual=analise["economia_anual"],
                 data_simulacao=result[0],
             )
 
@@ -332,3 +290,61 @@ class SimulacaoService:
 
         finally:
             cursor.close()
+
+    def gerar_analise_matematica_detalhada(
+        self, id_simulacao: int, id_projeto: int
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Gera análise matemática detalhada de uma simulação usando SymPy.
+        Inclui derivadas, pontos críticos e verificação de otimalidade.
+        """
+        simulacao = self.obter_simulacao(id_simulacao, id_projeto)
+        if not simulacao:
+            return None
+
+        calculadora = CalculadoraLoteEconomico(
+            demanda_anual=simulacao.demanda_anual,
+            custo_pedido=simulacao.custo_pedido,
+            custo_manutencao=simulacao.custo_manutencao,
+            lote_atual=simulacao.lote_atual_empresa,
+        )
+
+        return calculadora.gerar_relatorio_detalhado()
+
+    def gerar_dados_grafico(
+        self,
+        id_simulacao: int,
+        id_projeto: int,
+        q_min: float = 10,
+        q_max: float = 200,
+        pontos: int = 100,
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Gera dados para plotagem do gráfico de custo x lote.
+        """
+        simulacao = self.obter_simulacao(id_simulacao, id_projeto)
+        if not simulacao:
+            return None
+
+        calculadora = CalculadoraLoteEconomico(
+            demanda_anual=simulacao.demanda_anual,
+            custo_pedido=simulacao.custo_pedido,
+            custo_manutencao=simulacao.custo_manutencao,
+            lote_atual=simulacao.lote_atual_empresa,
+        )
+
+        dados_grafico = calculadora.gerar_dados_grafico(q_min, q_max, pontos)
+
+        # Adiciona pontos de interesse
+        dados_grafico["ponto_otimo"] = {
+            "lote": simulacao.lote_otimo_calculado,
+            "custo": simulacao.custo_total_otimo,
+        }
+
+        if simulacao.lote_atual_empresa:
+            dados_grafico["ponto_atual"] = {
+                "lote": simulacao.lote_atual_empresa,
+                "custo": simulacao.custo_total_atual,
+            }
+
+        return dados_grafico
