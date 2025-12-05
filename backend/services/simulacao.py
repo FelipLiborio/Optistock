@@ -58,21 +58,6 @@ class SimulacaoService:
                     analise["economia_anual"],
                 ),
             )
-            cursor.execute(
-                query,
-                (
-                    id_projeto,
-                    simulacao.nome_produto,
-                    simulacao.demanda_anual,
-                    simulacao.custo_pedido,
-                    simulacao.custo_manutencao,
-                    analise["lote_atual_empresa"],
-                    analise["lote_otimo_calculado"],
-                    analise["custo_total_atual"],
-                    analise["custo_total_otimo"],
-                    analise["economia_anual"],
-                ),
-            )
 
             result = cursor.fetchone()
             conn.commit()
