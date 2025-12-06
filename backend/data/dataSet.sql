@@ -1,14 +1,15 @@
 CREATE TABLE usuarios (
     id_usuario SERIAL PRIMARY KEY,
-    
+
     nome VARCHAR(120) NOT NULL,
     email VARCHAR(120) UNIQUE NOT NULL,
     senha VARCHAR(200) NOT NULL,
-    
+
     data_criacao TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE grupos (
+
+CREATE TABLE projeto (
     id_grupo SERIAL PRIMARY KEY,
 
     id_usuario INTEGER NOT NULL,
@@ -42,10 +43,9 @@ CREATE TABLE simulacoes (
 
     data_simulacao TIMESTAMP DEFAULT NOW(),
 
-    
+    -- Definição da Relação (Constraint)
     CONSTRAINT fk_simulacao_projeto
         FOREIGN KEY (id_projeto)
         REFERENCES projeto (id_grupo)
         ON DELETE CASCADE
 );
-
